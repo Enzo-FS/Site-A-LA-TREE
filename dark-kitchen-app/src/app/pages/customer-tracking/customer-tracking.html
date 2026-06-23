@@ -1,0 +1,232 @@
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-order">
+      <span class="order-label">Pedido</span>
+      <span class="order-number">#{{ (pedidoReal?.id | slice:0:6) || '---' }}</span>
+    </div>
+    <div class="header-logo">
+      <img src="https://i.imgur.com/nKQluiG.png" class="logo-img" alt="Logo" style="width: 32px; height: 32px;" />
+    </div>
+    <div class="header-eta">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="#fff" stroke-width="1.5"/><path d="M8 4.5V8l2.5 2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <span class="eta-label" style="color: #FFF3E0;">Tempo estimado</span>
+        <span class="eta-value" id="etaDisplay" style="color: #fff;">
+          @if (pedidoReal?.status === 'entregue') { Concluído } @else { {{ etaText }} }
+        </span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="stepper-bar" id="stepperBar">
+  <div class="stepper-track">
+    <div class="step" [class.active]="getNivelStatus(pedidoReal?.status) >= 0"><div class="step-rect"></div></div>
+    <div class="step" [class.active]="getNivelStatus(pedidoReal?.status) >= 1"><div class="step-rect"></div></div>
+    <div class="step" [class.active]="getNivelStatus(pedidoReal?.status) >= 2"><div class="step-rect"></div></div>
+    <div class="step" [class.active]="getNivelStatus(pedidoReal?.status) >= 3"><div class="step-rect"></div></div>
+    <div class="step" [class.active]="getNivelStatus(pedidoReal?.status) >= 4"><div class="step-rect"></div></div>
+  </div>
+  
+  <div class="stepper-status-text">
+    @switch (pedidoReal?.status) {
+      @case ('recebido') { Aguardando Confirmação }
+      @case ('preparando') { Em Preparação }
+      @case ('prontos') { Pedido Pronto }
+      @case ('saiu_para_entrega') { Retirado pelo Motoboy }
+      @case ('entregue') { Pedido Entregue }
+      @default { Carregando... }
+    }
+  </div>
+</div>
+
+<main class="main-content">
+  <section class="section status-visual-section">
+    <h2 class="status-title">Status do Pedido</h2>
+    <div class="visual-timeline">
+      <div class="vtl-item" [class.done]="getNivelStatus(pedidoReal?.status) > 0" [class.active]="pedidoReal?.status === 'recebido'">
+        <div class="vtl-icon"><img src="/teste/chm.png" alt="" style="width: 22px; height: 22px; object-fit: contain;"></div>
+        <div class="vtl-connector" [class.done]="getNivelStatus(pedidoReal?.status) > 0"></div>
+        <div class="vtl-content"><p class="vtl-title">Aguardando confirmação</p></div>
+      </div>
+
+      <div class="vtl-item" [class.done]="getNivelStatus(pedidoReal?.status) > 1" [class.active]="pedidoReal?.status === 'preparando'">
+        <div class="vtl-icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M11 5v6l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/></svg></div>
+        <div class="vtl-connector" [class.done]="getNivelStatus(pedidoReal?.status) > 1"></div>
+        <div class="vtl-content"><p class="vtl-title">Preparando</p></div>
+      </div>
+
+      <div class="vtl-item" [class.done]="getNivelStatus(pedidoReal?.status) > 2" [class.active]="pedidoReal?.status === 'prontos'">
+        <div class="vtl-icon"><svg width="22" height="22" viewBox="0 0 22 22"><rect x="5" y="11" width="12" height="7" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 11V8.5a3 3 0 016 0V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></div>
+        <div class="vtl-connector" [class.done]="getNivelStatus(pedidoReal?.status) > 2"></div>
+        <div class="vtl-content"><p class="vtl-title">Pedido pronto</p></div>
+      </div>
+
+      <div class="vtl-item" [class.done]="getNivelStatus(pedidoReal?.status) > 3" [class.active]="pedidoReal?.status === 'saiu_para_entrega'">
+        <div class="vtl-icon"><svg width="22" height="22" viewBox="0 0 22 22"><circle cx="7" cy="16" r="2" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="15" cy="16" r="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 8h9l3 5H3V8z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/><path d="M12 8l3.5 3H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></div>
+        <div class="vtl-connector" [class.done]="getNivelStatus(pedidoReal?.status) > 3"></div>
+        <div class="vtl-content"><p class="vtl-title">Retirado pelo motoboy</p></div>
+      </div>
+
+      <div class="vtl-item last" [class.done]="getNivelStatus(pedidoReal?.status) > 4" [class.active]="pedidoReal?.status === 'entregue'">
+        <div class="vtl-icon"><svg width="22" height="22" viewBox="0 0 22 22"><path d="M4 11l4 4 10-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+        <div class="vtl-content"><p class="vtl-title">Pedido Entregue</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="driver-address-container-new">
+    <div class="card-driver-new" style="border: 1px solid #E5E7EB; box-shadow: 0 4px 12px rgba(0,0,0,0.05); background: #FFFFFF; border-radius: 12px;">
+      <div style="background: #E27E0C; color: #FFFFFF; font-size: 10px; font-weight: 600; text-align: center; padding: 6px 0; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 10px 10px 0 0;">
+        DADOS DO ENTREGADOR
+      </div>
+      <div class="driver-body-new" style="padding: 12px;">
+        <div class="driver-profile-row" style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: #d3d3d3; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #E5E7EB;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 13px; font-weight: 800; color: #111827;">
+              @if (pedidoReal?.motoboy) { {{ pedidoReal.motoboy }} } @else { Aguardando... }
+            </span>
+            <span style="font-size: 9px; color: #6B7280; text-transform: uppercase; letter-spacing: 0.04em;">Entregador Parceiro</span>
+          </div>
+        </div>
+        <hr style="border: none; border-top: 1px dashed #E5E7EB; margin: 12px 0;" />
+        
+        <div class="driver-details-new" style="display: flex; flex-direction: column; gap: 4px; padding: 10px 0;">
+          @if (pedidoReal?.motoboy) {
+            <span style="font-size: 11px; color: #E27E0C; font-weight: 800; text-transform: uppercase;">Motoboy a caminho!</span>
+            <div style="margin-top: 4px;">
+              <span style="font-size: 10px; color: #4B5563; display: block;">{{ pedidoReal.modeloMoto }}</span>
+              <span style="font-size: 10px; font-weight: 700; color: #111827; display: block; letter-spacing: 0.02em;">{{ pedidoReal.placaMoto }}</span>
+            </div>
+          } @else {
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px; color: #9CA3AF;">
+              <span style="font-size: 14px;">⏳</span>
+              <span style="font-size: 10px; font-weight: 600;">Aguardando atribuição...</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    
+    <div class="column-right-new">
+      <div class="card-address-new">
+        <h3 class="address-title-new" style="color: #111827;">Endereço de Entrega</h3>
+        <div class="address-content-new" id="addressContent" [class.hidden]="addressEditMode">
+          @if (pedidoReal?.enderecoEntrega) {
+            <p style="font-size: 11px; font-weight: bold; color: #111827;">{{ pedidoReal.enderecoEntrega }}</p>
+          } @else {
+            <p style="font-size: 11px; font-weight: 600; color: #6B7280; font-style: italic;">Aguardando dados...</p>
+          }
+        </div>
+        <div class="address-edit-form-new" [class.hidden]="!addressEditMode">
+          <input type="text" #inputNovoEnd [value]="pedidoReal?.enderecoEntrega" placeholder="Endereço completo" style="width: 100%; margin-bottom: 5px;" />
+          <div class="form-actions-new">
+            <button class="btn-action-mini cancel" (click)="toggleAddressEdit()">X</button>
+            <button class="btn-action-mini save" (click)="saveAddress(inputNovoEnd.value)">✓</button>
+          </div>
+        </div>
+      </div>
+
+      @if (getNivelStatus(pedidoReal?.status) < 3) {
+        <button class="card-edit-btn-new" (click)="toggleAddressEdit()" style="border: 1px solid #111827; color: #111827;">Editar Endereço</button>
+      } @else {
+        <div style="text-align: center; background: #F3F4F6; padding: 10px; border-radius: 8px; border: 1px dashed #D1D5DB;">
+          <span style="font-size: 9px; color: #6B7280; font-weight: bold; text-transform: uppercase;">Bloqueado: Em Rota/Entregue</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  @if (pedidoReal?.status !== 'entregue') {
+    <section class="confirm-section-clear">
+      <button class="btn-confirm" #confirmBtn (click)="confirmDelivery(confirmBtn)">Confirmar Entrega</button>
+    </section>
+  }
+
+  <section class="section order-summary-section">
+    <h2 class="section-title">Resumo do Pedido</h2>
+    <ul class="order-items">
+      @for (item of pedidoReal?.itens; track $index) {
+        <li class="order-item">
+          <span class="item-qty">{{ item?.qty || item?.quantidade || item?.quantity || 1 }}x</span>
+          <span class="item-name">{{ item?.food?.name || item?.nome || item?.name || item?.produto || 'Produto' }}</span>
+        </li>
+      }
+    </ul>
+    
+    <div class="order-totals">
+      <p style="font-size: 12px; font-weight: bold;">Pagamento via: 
+        <span style="text-transform: uppercase; color: #E27E0C;">
+          {{ pedidoReal?.formaPagamento === 'entrega' ? 'Pagar na Entrega' : pedidoReal?.formaPagamento || 'N/A' }}
+        </span>
+      </p>
+      <hr>
+      <div class="total-row grand"><span>Total</span><span>R$ {{ pedidoReal?.valorTotal || '0,00' }}</span></div>
+    </div>
+  </section>
+  <section class="section support-section">
+    <h2 class="section-title">Precisa de ajuda?</h2>
+    <div class="support-actions" style="display: flex; gap: 12px; margin-top: 15px;">
+      
+      <button class="btn-support-primary" (click)="openChat('driver')" style="flex: 1; padding: 14px 10px; border-radius: 8px; background: #E27E0C; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px; border: none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        Falar com Entregador
+      </button>
+
+      <button class="btn-support-secondary" (click)="openChat('store')" style="flex: 1; padding: 14px 10px; border-radius: 8px; background: transparent; color: #E27E0C; border: 2px solid #E27E0C; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        Falar com a Loja
+      </button>
+      
+    </div>
+  </section>
+
+</main>
+<div class="chat-overlay" [class.open]="isChatOpen">
+  <div class="chat-modal">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <span class="chat-title">
+          {{ chatType === 'driver' ? 'Entregador: ' + (pedidoReal?.motoboy || 'Parceiro') : 'Atendimento da Loja' }}
+        </span>
+        <span class="chat-subtitle" *ngIf="chatType === 'driver'">
+          📞 {{ pedidoReal?.telefoneMoto || '(11) 98888-7777' }}
+        </span>
+        <span class="chat-subtitle" *ngIf="chatType === 'store'">
+          📞 (11) 4002-8922
+        </span>
+      </div>
+      <button class="chat-close" (click)="closeChat()">✕</button>
+    </div>
+    
+    <div class="chat-body">
+      <div class="chat-message received">
+        <p>
+          {{ chatType === 'driver' 
+            ? 'Olá! Estou responsável por levar o seu pedido até você.' 
+            : 'Olá! Como podemos ajudar com o seu pedido #' + ((pedidoReal?.id | slice:0:6) || '---') + '?' 
+          }}
+        </p>
+        <span class="chat-time">Agora</span>
+      </div>
+      
+      @for (msg of chatMessages; track $index) {
+        <div class="chat-message sent">
+          <p>{{ msg }}</p>
+          <span class="chat-time">Agora</span>
+        </div>
+      }
+    </div>
+    
+    <div class="chat-footer">
+      <input type="text" #chatInput placeholder="Digite sua mensagem..." (keyup.enter)="sendMessage(chatInput)" />
+      <button (click)="sendMessage(chatInput)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<app-bottom-nav active="orders"></app-bottom-nav>

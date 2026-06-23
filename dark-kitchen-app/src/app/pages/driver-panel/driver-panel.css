@@ -1,0 +1,397 @@
+/* =======================================================
+   RESET E VARIÁVEIS CORPORATIVAS
+   ======================================================= */
+:host {
+  display: block;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  --bg-app: #F4F7F6;
+  --text-main: #1A1C20;
+  --text-muted: #6B7280;
+  --border-light: #E5E7EB;
+  --primary: #111827;
+  --accent: #E27E0C;
+  --accent-hover: #c66f0a;
+  --success: #10B981;
+  --success-hover: #059669;
+  --warning: #F59E0B;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --shadow-strong: 0 8px 30px rgba(226, 126, 12, 0.15);
+  
+  /* Mantendo o app travado no formato mobile no PC */
+  min-height: 100svh;
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--bg-app);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.driver-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+/* =======================================================
+   HEADER GLASSMORPHISM
+   ======================================================= */
+.glass-header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  font-size: 18px;
+  background: var(--primary);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(17, 24, 39, 0.2);
+}
+
+.brand-titles h1 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.brand-titles p {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Status Online */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--success);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  animation: pulseGreen 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* =======================================================
+   CONTEÚDO PRINCIPAL (CARDS)
+   ======================================================= */
+.driver-main {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.corp-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.corp-card.active-card {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 30px rgba(16, 185, 129, 0.1);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border-light);
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.order-info .label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.order-id {
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.02em;
+}
+
+/* Badges */
+.status-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.05em;
+}
+.status-pill.warning { background: #FEF3C7; color: #D97706; }
+.status-pill.success { background: #D1FAE5; color: #059669; }
+
+/* Corpo dos Cards */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.instruction-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #FFFBEB;
+  border: 1px solid #FEF3C7;
+  padding: 12px;
+  border-radius: 10px;
+}
+.instruction-box p {
+  font-size: 13px;
+  color: #92400E;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.info-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.address-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.glass-box {
+  background: var(--bg-app);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 16px;
+}
+.glass-box label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+.main-address {
+  font-size: 16px;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Área Financeira */
+.financial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fin-item {
+  background: var(--bg-app);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fin-item.highlight {
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+}
+
+.fin-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.fin-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  text-transform: uppercase;
+}
+.fin-value.price {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+/* =======================================================
+   BOTÕES CORPORATIVOS
+   ======================================================= */
+.btn-corp-action, .btn-corp-success {
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.full { width: 100%; }
+
+.btn-corp-action {
+  background: var(--accent);
+  color: white;
+  box-shadow: var(--shadow-strong);
+}
+.btn-corp-action:active { background: var(--accent-hover); transform: scale(0.98); }
+
+.btn-corp-success {
+  background: var(--success);
+  color: white;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+}
+.btn-corp-success:active { background: var(--success-hover); transform: scale(0.98); }
+
+/* =======================================================
+   ESTADOS VAZIOS E ANIMAÇÕES
+   ======================================================= */
+.empty-glass {
+  flex: 1;
+  background: var(--glass-bg);
+  backdrop-filter: blur(8px);
+  border: 1px dashed var(--border-light);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10vh;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.empty-glass h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 8px 0;
+}
+
+.empty-glass p {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 250px;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 16px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Utils de Animação */
+.slide-up { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.bounce { animation: bounce 2s infinite; }
+.spin-slow { animation: spin 4s linear infinite; display: inline-block; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}

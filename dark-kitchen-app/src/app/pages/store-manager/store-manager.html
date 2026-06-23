@@ -1,0 +1,214 @@
+<div class="corp-layout">
+  <header class="corp-header">
+    <div class="header-inner">
+      <div class="header-titles">
+        <h1>Painel de Controle</h1>
+        <p>Logística e Operações</p>
+      </div>
+      <div class="header-logo">
+        <img src="https://i.imgur.com/nKQluiG.png" alt="Logo da Loja">
+      </div>
+    </div>
+  </header>
+
+  <main class="corp-main">
+    <nav class="corp-tabs">
+      <button class="tab-item" [class.active]="currentTab === 'recebidos'" (click)="setTab('recebidos')">Recebidos</button>
+      <button class="tab-item" [class.active]="currentTab === 'preparacao'" (click)="setTab('preparacao')">Na Cozinha</button>
+      <button class="tab-item" [class.active]="currentTab === 'prontos'" (click)="setTab('prontos')">Prontos</button>
+      <button class="tab-item" [class.active]="currentTab === 'caminho'" (click)="setTab('caminho')">Em Rota</button>
+      <button class="tab-item" [class.active]="currentTab === 'motoboys'" (click)="setTab('motoboys')">Frota</button>
+    </nav>
+
+    <section class="tab-content" [class.active]="currentTab === 'recebidos'">
+      @for (pedido of getPedidos('recebidos'); track pedido.id) {
+        <article class="corp-card slide-up">
+          <div class="card-head">
+            <span class="order-id">#{{ pedido.id | slice:0:6 }}</span>
+            <span class="badge new">Novo Pedido</span>
+          </div>
+          
+          <div class="card-body">
+            <div class="info-group">
+              <label>Cliente & Destino</label>
+              <p><strong>{{ pedido.clienteNome || 'Visitante' }}</strong></p>
+              <p class="text-sub">{{ pedido.enderecoEntrega || 'Retirada no Local' }}</p>
+            </div>
+            
+            <div class="info-group box-items">
+              <label>Resumo do Pedido</label>
+              <ul class="item-list">
+                @for (item of pedido.itens; track $index) {
+                  <li>
+                    <span class="qty">{{ item?.qty || item?.quantidade || item?.quantity || 1 }}x</span> 
+                    <span class="name">{{ item?.food?.name || item?.nome || item?.name || item?.produto || 'Item' }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+
+            <div class="financial-row">
+              <div class="fin-data">
+                <label>Pagamento</label>
+                <span>{{ pedido.formaPagamento === 'entrega' ? 'Na Entrega' : pedido.formaPagamento }}</span>
+              </div>
+              <div class="fin-data right">
+                <label>Total</label>
+                <span class="price">R$ {{ pedido.valorTotal || '0,00' }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card-footer split">
+            <button class="btn-corp outline danger">Recusar</button>
+            <button class="btn-corp primary" (click)="avancarPedido(pedido, 'preparacao')">Aceitar Pedido</button>
+          </div>
+        </article>
+      } @empty { 
+        <div class="empty-state slide-up">
+          <span class="icon">📥</span>
+          <p>Nenhum pedido novo na fila.</p>
+        </div>
+      }
+    </section>
+
+    <section class="tab-content" [class.active]="currentTab === 'preparacao'">
+      @for (pedido of getPedidos('preparacao'); track pedido.id) {
+        <article class="corp-card slide-up">
+          <div class="card-head">
+            <span class="order-id">#{{ pedido.id | slice:0:6 }}</span>
+            <span class="badge in-progress">Cozinha</span>
+          </div>
+          <div class="card-body">
+            <div class="info-group">
+              <label>Cliente</label>
+              <p><strong>{{ pedido.clienteNome || 'Visitante' }}</strong></p>
+            </div>
+            <div class="info-group box-items highlight">
+              <label>Preparo Atual</label>
+              <ul class="item-list">
+                @for (item of pedido.itens; track $index) {
+                  <li><span class="qty">{{ item?.qty || item?.quantidade || item?.quantity || 1 }}x</span> {{ item?.food?.name || item?.nome || item?.name || item?.produto || 'Item' }}</li>
+                }
+              </ul>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn-corp primary full" (click)="avancarPedido(pedido, 'prontos')">Marcar como Pronto</button>
+          </div>
+        </article>
+      } @empty { 
+        <div class="empty-state slide-up">
+          <span class="icon">🍳</span>
+          <p>A cozinha está livre no momento.</p>
+        </div>
+      }
+    </section>
+
+    <section class="tab-content" [class.active]="currentTab === 'prontos'">
+      @for (pedido of getPedidos('prontos'); track pedido.id) {
+        <article class="corp-card slide-up">
+          <div class="card-head">
+            <span class="order-id">#{{ pedido.id | slice:0:6 }}</span>
+            <span class="badge ready">Aguardando Retirada</span>
+          </div>
+          <div class="card-body">
+            <div class="info-group">
+              <label>Destino</label>
+              <p><strong>{{ pedido.clienteNome || 'Visitante' }}</strong></p>
+              <p class="text-sub">{{ pedido.enderecoEntrega || 'Retirada no Local' }}</p>
+            </div>
+            
+            <div class="info-group">
+              <label>Atribuição de Logística</label>
+              <select class="corp-select" (change)="pedido.motoboySelecionado = $any($event.target).value">
+                <option value="">-- Selecione o Entregador --</option>
+                @if (motoboys$ | async; as listaDeMotoboys) {
+                  @for (moto of listaDeMotoboys; track moto.id) {
+                    <option [value]="moto.nome">{{ moto.nome }} ({{ moto.placa }})</option>
+                  }
+                }
+              </select>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn-corp primary full" (click)="atribuirMotoboy(pedido, pedido.motoboySelecionado)">Atribuir e Enviar</button>
+          </div>
+        </article>
+      } @empty { 
+        <div class="empty-state slide-up">
+          <span class="icon">📦</span>
+          <p>Nenhum pedido aguardando despacho.</p>
+        </div>
+      }
+    </section>
+
+    <section class="tab-content" [class.active]="currentTab === 'caminho'">
+      @for (pedido of getPedidos('caminho'); track pedido.id) {
+        <article class="corp-card active-route slide-up">
+          <div class="card-head">
+            <span class="order-id">#{{ pedido.id | slice:0:6 }}</span>
+            <span class="badge on-route">Em Rota</span>
+          </div>
+          <div class="card-body">
+            <div class="driver-status-box">
+              <div class="indicator pulse-dot"></div>
+              <div>
+                <span class="label">Entregador Responsável</span>
+                <strong>{{ pedido.motoboy || 'Parceiro Local' }}</strong>
+              </div>
+            </div>
+            <div class="info-group">
+              <label>Endereço do Cliente</label>
+              <p><strong>{{ pedido.clienteNome || 'Visitante' }}</strong></p>
+              <p class="text-sub">{{ pedido.enderecoEntrega || 'Retirada no Local' }}</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn-corp success full" (click)="avancarPedido(pedido, 'entregue')">Confirmar Entrega Realizada</button>
+          </div>
+        </article>
+      } @empty { 
+        <div class="empty-state slide-up">
+          <span class="icon">🏍️</span>
+          <p>Nenhuma rota ativa no momento.</p>
+        </div>
+      }
+    </section>
+
+    <section class="tab-content" [class.active]="currentTab === 'motoboys'">
+      <article class="corp-card form-card slide-up">
+        <div class="card-head borderless">
+          <h2>Cadastro de Entregadores</h2>
+        </div>
+        <div class="card-body">
+          <div class="corp-form">
+            <div class="form-group">
+              <label>Nome Completo</label>
+              <input type="text" #nomeMoto class="corp-input" placeholder="Ex: Carlos Oliveira">
+            </div>
+            <div class="form-group">
+              <label>Telefone / WhatsApp</label>
+              <input type="text" #telefoneMoto class="corp-input" placeholder="(11) 90000-0000">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Modelo do Veículo</label>
+                <input type="text" #modeloMoto class="corp-input" placeholder="Ex: Honda CG 160">
+              </div>
+              <div class="form-group">
+                <label>Placa</label>
+                <input type="text" #placaMoto class="corp-input uppercase" placeholder="ABC-1234">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn-corp primary full" (click)="cadastrarMotoboy(nomeMoto.value, modeloMoto.value, placaMoto.value, telefoneMoto.value); nomeMoto.value=''; modeloMoto.value=''; placaMoto.value=''; telefoneMoto.value='';">
+            Registrar Parceiro Logístico
+          </button>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>

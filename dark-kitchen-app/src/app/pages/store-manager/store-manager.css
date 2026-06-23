@@ -1,0 +1,356 @@
+/* =======================================================
+   VARIÁVEIS DE CORES SOLICITADAS
+   ======================================================= */
+:host {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  
+  /* Cores exatas passadas por você */
+  --white:       #FFFFFF;
+  --header-bg:   #363636;
+  --orange:      #E27E0C;
+  --orange-lite: #FFF3E0;
+  --gray:        #ECECEC;
+  --gray-mid:    #C4C4C4;
+  --gray-dark:   #6B6B6B;
+  
+  /* Variáveis extras de controle de layout/textos */
+  --surface:     #F8F8F8; /* Fundo suave da tela para dar contraste aos cards brancos */
+  --text-main:   #1A1A1A;
+  --danger:      #D93025;
+  --success:     #10B981;
+  --shadow-sm:   0 4px 12px rgba(0, 0, 0, 0.05);
+  --radius-md:   12px;
+
+  min-height: 100svh;
+  max-width: 430px;
+  margin: 0 auto;
+  background: var(--surface);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.corp-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+/* =======================================================
+   HEADER SÓBRIO E CORPORATIVO
+   ======================================================= */
+.corp-header {
+  background: var(--header-bg);
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-titles h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.header-titles p {
+  font-size: 10px;
+  color: var(--gray-mid);
+  margin: 2px 0 0 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+  background: var(--white);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.header-logo img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+
+/* =======================================================
+   ABAS DE NAVEGAÇÃO FLUIDAS
+   ======================================================= */
+.corp-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.corp-tabs {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray);
+  scrollbar-width: none;
+}
+.corp-tabs::-webkit-scrollbar { display: none; }
+
+.tab-item {
+  white-space: nowrap;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--gray);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-dark);
+  transition: all 0.2s ease;
+}
+
+.tab-item:hover {
+  border-color: var(--gray-mid);
+}
+
+.tab-item.active {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+  box-shadow: 0 4px 12px rgba(226, 126, 12, 0.3);
+}
+
+/* =======================================================
+   CONTEÚDO E CARDS CORPORATIVOS
+   ======================================================= */
+.tab-content {
+  display: none;
+  padding: 20px;
+  flex-direction: column;
+  gap: 16px;
+}
+.tab-content.active {
+  display: flex;
+}
+
+.corp-card {
+  background: var(--white);
+  border: 1px solid var(--gray);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.corp-card.active-route {
+  border-color: var(--success);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.1);
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px dashed var(--gray-mid);
+}
+.card-head.borderless { border-bottom: none; padding-bottom: 0; }
+.card-head h2 { font-size: 16px; color: var(--text-main); font-weight: 700; }
+
+.order-id {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--header-bg);
+}
+
+/* Badges de Status */
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.badge.new { background: #E8F0FE; color: #1967D2; }
+.badge.in-progress { background: var(--orange-lite); color: var(--orange); }
+.badge.ready { background: #F3E8FF; color: #7E22CE; }
+.badge.on-route { background: #E6F4EA; color: #137333; }
+
+/* Corpo do Card */
+.card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-group label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+.info-group p {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin: 0;
+}
+.info-group p.text-sub {
+  font-size: 12px;
+  color: var(--gray-dark);
+  font-weight: 500;
+}
+
+/* Caixas de Itens */
+.box-items {
+  background: var(--surface);
+  border: 1px solid var(--gray);
+  border-radius: 8px;
+  padding: 12px;
+}
+.box-items.highlight {
+  background: var(--orange-lite);
+  border-color: #FDE6C5;
+}
+.item-list {
+  list-style: none;
+  padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.item-list li {
+  font-size: 13px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.item-list .qty {
+  font-weight: 800;
+  color: var(--orange);
+  background: var(--white);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+/* Linha Financeira */
+.financial-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-top: 1px solid var(--gray);
+  padding-top: 12px;
+}
+.fin-data { display: flex; flex-direction: column; gap: 2px; }
+.fin-data.right { align-items: flex-end; }
+.fin-data span { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--header-bg); }
+.fin-data .price { font-size: 16px; font-weight: 800; color: var(--orange); }
+
+/* Motorista Ativo */
+.driver-status-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #E6F4EA;
+  border: 1px solid #CEEAD6;
+  padding: 12px;
+  border-radius: 8px;
+}
+.driver-status-box strong { font-size: 14px; color: #137333; display: block; }
+.pulse-dot { width: 8px; height: 8px; background: #137333; border-radius: 50%; animation: pulse 1.5s infinite; }
+
+/* Formulários */
+.corp-select, .corp-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--white);
+  border: 1px solid var(--gray-mid);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+.corp-select:focus, .corp-input:focus { border-color: var(--header-bg); }
+.corp-input.uppercase { text-transform: uppercase; }
+
+.corp-form { display: flex; flex-direction: column; gap: 16px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* =======================================================
+   BOTÕES COM TRANSLATE (FIM DO CLIQUE DUPLO)
+   ======================================================= */
+.card-footer {
+  padding: 16px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid var(--gray);
+}
+.card-footer.split button { flex: 1; }
+
+.btn-corp {
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: background 0.2s, transform 0.1s; /* Transição rápida para a descida */
+}
+.btn-corp.full { width: 100%; }
+
+/* Cores dos Botões */
+.btn-corp.primary { background: var(--header-bg); color: var(--white); }
+.btn-corp.outline.danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+.btn-corp.success { background: var(--success); color: var(--white); }
+
+/* 👇 A MÁGICA QUE RESOLVE O CLIQUE DUPLO 👇 */
+.btn-corp.primary:active { background: #1a1a1a; transform: translateY(2px); }
+.btn-corp.outline.danger:active { background: #FCE8E6; transform: translateY(2px); }
+.btn-corp.success:active { background: #059669; transform: translateY(2px); }
+
+/* =======================================================
+   ANIMAÇÕES E ESTADOS VAZIOS
+   ======================================================= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: var(--white);
+  border: 1px dashed var(--gray-mid);
+  border-radius: var(--radius-md);
+}
+.empty-state .icon { font-size: 40px; opacity: 0.4; margin-bottom: 12px; }
+.empty-state p { font-size: 13px; color: var(--gray-dark); font-weight: 600; margin: 0; }
+
+.slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(19, 115, 51, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(19, 115, 51, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(19, 115, 51, 0); }
+}

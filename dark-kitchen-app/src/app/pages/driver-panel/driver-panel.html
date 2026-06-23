@@ -1,0 +1,112 @@
+<div class="driver-layout">
+  <header class="glass-header">
+    <div class="header-brand">
+      <div class="brand-icon">🏍️</div>
+      <div class="brand-titles">
+        <h1>Painel do Entregador</h1>
+        <p>Logística e Rotas</p>
+      </div>
+    </div>
+    <div class="status-indicator">
+      <span class="pulse-dot"></span> Online
+    </div>
+  </header>
+
+  <main class="driver-main">
+    @if (pedido) {
+      
+      @switch (pedido.status) {
+        
+        @case ('prontos') {
+          <div class="corp-card alert-card slide-up">
+            <div class="card-top">
+              <div class="order-info">
+                <span class="label">Pedido Pendente</span>
+                <span class="order-id">#{{ (pedido.id | slice:0:6) }}</span>
+              </div>
+              <span class="status-pill warning">Retirada</span>
+            </div>
+            
+            <div class="card-body">
+              <div class="instruction-box">
+                <span class="icon">📍</span>
+                <p>Vá até a loja buscar este pedido imediatamente.</p>
+              </div>
+              
+              <div class="info-group">
+                <label>Destino da Entrega</label>
+                <p class="address-text">{{ pedido.enderecoEntrega }}</p>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn-corp-action full" (click)="iniciarEntrega()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Coletei e Estou a Caminho
+              </button>
+            </div>
+          </div>
+        }
+
+        @case ('saiu_para_entrega') {
+          <div class="corp-card active-card slide-up">
+            <div class="card-top">
+              <div class="order-info">
+                <span class="label">Pedido em Trânsito</span>
+                <span class="order-id">#{{ (pedido.id | slice:0:6) }}</span>
+              </div>
+              <span class="status-pill success">Em Rota</span>
+            </div>
+            
+            <div class="card-body">
+              <div class="glass-box">
+                <label>Endereço do Cliente</label>
+                <p class="main-address"><strong>{{ pedido.enderecoEntrega }}</strong></p>
+              </div>
+
+              <div class="financial-grid">
+                <div class="fin-item">
+                  <span class="fin-label">Forma de Pagamento</span>
+                  <span class="fin-value">{{ pedido.formaPagamento === 'entrega' ? 'Na Entrega' : pedido.formaPagamento }}</span>
+                </div>
+                <div class="fin-item highlight">
+                  <span class="fin-label">Total a Receber</span>
+                  <span class="fin-value price">R$ {{ pedido.valorTotal || '0,00' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn-corp-success full" (click)="concluirEntrega()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Confirmar Entrega ao Cliente
+              </button>
+            </div>
+          </div>
+        }
+
+        @case ('entregue') {
+          <div class="empty-glass slide-up">
+            <div class="empty-icon bounce">🎉</div>
+            <h3>Entrega Finalizada!</h3>
+            <p>Aguardando novos pedidos serem despachados pela loja.</p>
+          </div>
+        }
+
+        @default {
+          <div class="empty-glass slide-up">
+            <div class="empty-icon spin-slow">⏳</div>
+            <h3>Aguardando Liberação</h3>
+            <p>O pedido atual ainda está na cozinha da loja.</p>
+          </div>
+        }
+      }
+
+    } @else {
+      <div class="loading-container pulse">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Sincronizando rotas...</p>
+      </div>
+    }
+  </main>
+</div>
