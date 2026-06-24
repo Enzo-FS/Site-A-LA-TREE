@@ -1,4 +1,37 @@
-🌳 Boteco da ÁrvoreEcossistema completo de delivery para dark kitchen, construído em Angular 17 com Firebase (Authentication + Firestore + Storage).O projeto é dividido em três frentes integradas em uma única aplicação: App do Cliente, Painel Operacional (Gerência) e Painel do Entregador (Motoboy). O sistema consome catálogo, autenticações e pedidos a partir de dois projetos Firebase distintos: um banco principal para usuários/pedidos/frota, e o banco do painel de gerência para o cardápio.✨ Funcionalidades📱 App do ClienteAutenticação: Login e cadastro via Firebase Authentication (e-mail/senha) e modo Visitante.Catálogo em Tempo Real: Cardápio carregado dinamicamente com categorias (Pratos, Lanches, Porções, Bebidas, Entrada).Carrinho e Checkout: Fluxo completo de pedido com cálculo de subtotal e seleção de pagamento (Entrega ou Pix).Rastreamento Ao Vivo: Stepper visual (Aguardando, Preparando, Pronto, Em Rota, Entregue) com mapa interativo.Suporte Integrado: Simulação de chat flutuante para contato com a Loja ou com o Entregador parceiro.Perfil de Usuário: Gerenciamento de dados de contato e endereço de entrega.⚙️ Painel Operacional (Gerência)Gestão de Filas (Kanban): Separação de pedidos em abas (Novos, Cozinha, Prontos, Em Rota).Atribuição Logística: Seleção e despacho de entregadores diretamente pelo painel.Gestão de Frota: Cadastro de motoboys, modelos de veículos e placas.Design Corporativo: Interface minimalista utilizando conceitos de Glassmorphism (fundos translúcidos).🏍️ Painel do EntregadorSincronização de Rotas: O entregador visualiza imediatamente o pedido atribuído a ele com os dados do cliente.Controle de Status: Botões de ação rápida para confirmar coleta ("Estou a Caminho") e finalização ("Entrega Realizada").🏗️ ArquiteturaO projeto utiliza Standalone Components (sem NgModules) e injeção de dependências moderna, além de contar com a NgZone para otimização de detecção de mudanças (evitando falhas de clique).Plaintextsrc/
+# 🌳 A LA TREE
+
+Ecossistema completo de delivery para dark kitchen, construído em **Angular 17** com **Firebase** (Authentication + Firestore + Storage). 
+
+O projeto é dividido em três frentes integradas em uma única aplicação: **App do Cliente**, **Painel Operacional (Gerência)** e **Painel do Entregador (Motoboy)**. O sistema consome catálogo, autenticações e pedidos a partir de dois projetos Firebase distintos: um banco principal para usuários/pedidos/frota, e o banco do painel de gerência para o cardápio.
+
+## ✨ Funcionalidades
+
+### 📱 App do Cliente
+* **Autenticação:** Login e cadastro via Firebase Authentication (e-mail/senha) e modo Visitante.
+* **Catálogo em Tempo Real:** Cardápio carregado dinamicamente com categorias (Pratos, Lanches, Porções, Bebidas, Entrada).
+* **Carrinho e Checkout:** Fluxo completo de pedido com cálculo de subtotal e seleção de pagamento (Entrega ou Pix).
+* **Rastreamento Ao Vivo:** Stepper visual (Aguardando, Preparando, Pronto, Em Rota, Entregue) com mapa interativo.
+* **Suporte Integrado:** Simulação de chat flutuante para contato com a Loja ou com o Entregador parceiro.
+* **Perfil de Usuário:** Gerenciamento de dados de contato e endereço de entrega.
+
+### ⚙️ Painel Operacional (Gerência)
+* **Gestão de Filas (Kanban):** Separação de pedidos em abas (Novos, Cozinha, Prontos, Em Rota).
+* **Atribuição Logística:** Seleção e despacho de entregadores diretamente pelo painel.
+* **Gestão de Frota:** Cadastro de motoboys, modelos de veículos e placas.
+* **Design Corporativo:** Interface minimalista utilizando conceitos de *Glassmorphism* (fundos translúcidos).
+
+### 🏍️ Painel do Entregador
+* **Sincronização de Rotas:** O entregador visualiza imediatamente o pedido atribuído a ele com os dados do cliente.
+* **Controle de Status:** Botões de ação rápida para confirmar coleta ("Estou a Caminho") e finalização ("Entrega Realizada").
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto utiliza **Standalone Components** (sem NgModules) e injeção de dependências moderna, além de contar com a `NgZone` para otimização de detecção de mudanças (evitando falhas de clique).
+
+```text
+src/
 ├── environments/
 │   ├── environment.ts            # Credenciais Firebase (dev)
 │   └── environment.prod.ts       # Credenciais Firebase (prod)
@@ -22,8 +55,3 @@
 │
 ├── main.ts                        # Bootstrap da app + providers do Firebase + Router
 └── styles.css                     # Variáveis globais, CSS Reset e regras 100svh mobile-first
-🔀 Dois Projetos Firebase, um EcossistemaO app se conecta a dois projetos Firebase diferentes de forma simultânea para garantir segurança e separação de responsabilidades:Projeto FirebaseUsado paraOnde é configuradocardapio-a-la-treeAuthentication, pedidos (pedidos), frota (motoboys) e cadastro de clientes (clientes).environment.firebasegerencia-a-la-treeCatálogo de produtos (coleção cardapio), cadastrado previamente pelo painel administrativo.environment.firebaseGerenciaIsso é feito inicializando uma segunda app Firebase nomeada ('gerencia') no main.ts, com sua própria instância de Firestore exposta via um InjectionToken. O ProdutoService injeta esse token em vez do Firestore padrão, garantindo que o cardápio seja lido do banco isolado.🚀 Como rodar o projetoPré-requisitosNode.js 18+Angular CLI (npm install -g @angular/cli)Dois projetos Firebase já criados e configurados no Console do Google.Passo a passo1. Instalar dependênciasBashnpm install
-2. Configurar credenciais FirebaseAbra os arquivos src/environments/environment.ts e environment.prod.ts e preencha as chaves firebase e firebaseGerencia com as credenciais web dos seus respectivos projetos.3. Rodar em modo desenvolvimentoBashng serve
-O app ficará disponível em http://localhost:4200.4. Build e Deploy (Hosting)Bashng build
-firebase deploy --only hosting
-🔥 Configuração do Firebase (Banco de Dados)Projeto Principal (cardapio-a-la-tree)Ative Authentication → método E-mail/senha.Crie um Firestore Database e inicie as seguintes coleções:clientes: Armazena os dados dos usuários logados.pedidos: Recebe o fluxo de compras e atualizações de status.motoboys: Cadastro da frota para uso do painel operacional.Projeto de Gerência (gerencia-a-la-tree)Crie (ou use) o projeto onde o painel administrativo cadastra os produtos.Garanta que a coleção cardapio exista e contenha os campos básicos do produto.Nota: O produto.service.ts aceita propriedades tanto em português (nome, preco, imagem, categoria) quanto em inglês (name, price, imageUrl), garantindo compatibilidade retroativa.Regras de SegurançaLembre-se de configurar e publicar o firestore.rules nos consoles de ambos os projetos para proteger os dados de leitura e gravação não autorizadas.🛠️ Stack Técnica e Boas PráticasAngular 17: Standalone Components, Signals para reatividade local e injeção de dependência via inject().Firebase 10: Integração direta modular (@angular/fire).Design System Customizado: Utilização pesada de variáveis CSS nativas, viewport dinâmico (100svh) para Mobile Safari/Chrome, e componentes baseados em Glassmorphism.Otimização de Performance: Uso estratégico do NgZone.run() para lidar com concorrência assíncrona do Firebase e atualizações instantâneas de UI, evitando anomalias de "clique duplo".
